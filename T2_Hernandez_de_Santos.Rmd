@@ -1,0 +1,314 @@
+---
+title: "tarea2"
+author: "María José Hernández de Santos"
+date: "16/2/2022"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+**Tarea 2**
+
+Elabora un documento de RMarkdown con tus respuestas. Envía y/o sube a una liga de github tu respuesta debes incluir al menos el archivo con extensión Rmd y opcionalmente el archivo html. Los comentarios a los problemas, códigos y sobre todo discusión de tus resultados deben ir como texto de RMarkdown 
+
+## 1. (15) Considera las siguientes cantidades discute y justifica qué tipo de distribución de probabilidad pueden tener las siguientes variables: 
+
+#### a. El número (talla) de calzado de adultos varones en México. 
+
+***Gaussiana**, ya que la mayoría de los adultos varones poseen un número de calzado que ronda al rededor del promedio, mientras que unos pocos tendrán una talla de calzado muy grande o muy pequeña.*
+
+#### b. La distribución de habitantes en asentamientos humanos de México.
+
+*Distribución de cola larga, ya que hay pocas ciudades con muchos habitantes, mientras que la mayoría de las ciudades son medianas o pequeñas.*
+
+c.  La velocidad promedio de los automóviles en Bernardo Quintana a las 9 de la mañana en un día laborable. 
+
+***Poisson**, ya que BQ, al ser una vialidad importante, cruza casi todo querétaro. Habrá segmentos de BQ en los que los haya embotellamientos, mientras que habrá otras automovilistas vayan más rápido debido a que ese segmento de la vialidad no está despejado. Además, considerando que la gente es desesperada, suele acelerar en los tramitos libres.*
+
+d\. La velocidad promedio de los automóviles en Bernardo Quintana a las 3 de la mañana. 
+
+*Logarítmica, ya que es casi un hecho de que a las tres de la mañana BQ está libre. Podría pensar también en que la urgencia de llegar a tu casa en la madrugada es mucha porque pues... está pegriloso. \
+*
+
+\(5\) Supongamos que tenemos dos nodos (A,B) en una red. El nodo A y B tiene el mismo degree, pero el A tiene un coeficiente de clusterización de 1 y el nodo B un coeficiente bajo.Dibuja está situación y explica cuál sería una mejor diana si quieres eliminarlos y afectar a la red.
+
+La mejor diana sería el nodo B, ya que de esta manera estamos alterando toda la conectividad de la red, en otras palabras, si quitas a B, estás logrando que los nodos cercanos a este pierdan conectividad con el resto.
+
+![](WhatsApp%20Image%202022-02-16%20at%2012.41.04.jpeg "Red")
+
+(olvidé marcar la linea que está en lapiz entre los signos de interrogación arriba y abajo del nodo a, pero se supone que así están conectados todos los nodos y por eso el coeficiente de clusterización es 1.
+
+\(40\) Elabora un programa en R que usando funciones calcule, a partir de una matriz de adyacencia (Sólo utiliza R base para resolver este problema)
+
+a\. Si la red es dirigida o no.
+
+b\. Si la red es pesada o no.
+
+c\. El degree de los nodos.
+
+d\. El histograma del degree.
+
+```{r}
+#primero debo crear la matriz de adyacencia
+lamasmatriz<-matrix(nrow=3, ncol=3)
+#ahí se creó una matriz vacía, ahora la voy a llenar
+lamasmatriz[1,1]<-0
+lamasmatriz[1,2]<-2
+lamasmatriz[1,3]<-3
+lamasmatriz[2,1]<-2
+lamasmatriz[2,2]<-0
+lamasmatriz[2,3]<-2
+lamasmatriz[3,1]<-3
+lamasmatriz[3,2]<-2
+lamasmatriz[3,3]<-0
+lamasmatriz
+```
+
+#### la red es dirigida o no?
+
+si una red es dirigida, M\[ij\] es distinto de M\[ji\], mientras que si la red es dirigida, M\[ij\] es igual a M\[ji\]. En esta función que acabo de crear, apartir de una matriz, siendo i los valores de las columnas y j el de las filas, se comparan las coordenadas en ij y ji, de ser iguales, se trata de una red no dirigida, de ser distintas, se trata de una red dirigida.
+
+```{r}
+  directedornot<-function(matriz){ 
+    for(i in 1:ncol(matriz)){
+    for( j in 1:nrow(matriz)){
+    if ((matriz)[i,j] != (matriz)[j,i]){
+      print ("red dirigida")} else{print("red no dirigida")} 
+}
+  }
+   }
+  
+directedornot(lamasmatriz)  
+
+  #mi red es no dirigida 
+```
+
+#### La matriz es pesada?
+
+Una matriz es pesada cuando la conexión tiene un valor distinto de uno.
+
+En este caso, si ij o ji son mayores que 1, se trata de una red pesada.
+
+En la estructura de mi función, establezco que para un objeto matriz, y con ayuda de un ciclo for, dependiendo de que el valor de M\[i,j\] y M\[j,i\] cumpla ciertas condiciones, arroje si la red es pesada o no. Esto para todos los valores de i y j (1:ncol, 1:nrow).
+
+Las condiciones están establecidadas con condicionales if, else if y else. Si la condición de que M\[i,j\] y M\[j,i\] sean mayores que 1, se imprimirá la frase "red pesada"; si son iguales a 1, se imprimirá la frase "Red no pesada", y si son iguales a 0, se ignora por la carencia de conexión (en este caso la interacción del nodo consigo mismo)
+
+```{r}
+pesado<-function(matriz){
+  for(i in 1:ncol(matriz)){
+    for(j in 1:nrow(matriz)){
+      if ((matriz)[i,j]>1){print("Red pesada")} else if ((matriz)[j,i]>1){print("Red pesada")} else if((matriz)[i,j]==0){print("-")} else if((matriz)[j,i]==0){print("")}
+      else{print("red no pesada")}
+    }
+  }
+}
+
+pesado(lamasmatriz)
+
+
+
+```
+
+#### Degree de nodos
+
+```{r}
+
+di<-function(matriz){for(i in nrow(matriz)){ return(di<-c(sum(matriz[,i])))
+}}
+di(lamasmatriz)
+
+
+#no sé qué hice mal:c
+```
+
+#### histograma del degree
+
+```{r}
+
+htgrm<-function(di){hist(di)}
+htgrm<-lamasmatriz
+#no me saleeee:c
+```
+
+## (40) A partir de la red de interacción de proteínas alojada en la librería igraphdata, que puedes llamar mediante data(yeast) elabora un programa en R (acá sí puedes usar librerías especializadas de R) que:
+
+#### a. Calcule la distribución de conectividades y grafique esa distribución . Discute tu resultado.
+
+```{r}
+#llamar a la librería
+library(igraphdata)
+library(igraph)
+data("yeast")
+distlev<-degree(yeast, mode = "all")
+mean(distlev)
+#En promedio, cada nodo tiene 9 conexiones.
+
+hist(distlev, main = "frecuencia de conectividad en la red Yeast", xlab="Degree", ylab="número de nodos", freq=TRUE)
+#se hace un histograma debido a que estamos hablando de frecuencias, y es más sencillo de entender en un histograma 
+#La mayoría de los nodos (2000) tienen un degree de 10, y la frecuencia cae drásticamente pasando el valor de degree de 10, lo que arroja que la mayoría de los nodos tienen 10 conexiones con otros nodos. Este dato tiene sentido, ya que la media aritmética, que es de 9.05, ronda al rededor del degree con más frecuencia. 
+
+##### Distribución de la conectividad#####
+dcl<-degree.distribution(yeast)
+
+plot(dcl, main= "distribución de la conectividad",ylab="p" ,xlab = "degree")
+```
+
+Es una distribución de cola larga. Se puede observar que la probabilidad más grande es que los nodos tengan degrees pequeños. Esto es común en las redes biológicas, como lo es el caso de Yeast.
+
+#### b. Grafique el boxplot de la distribución de conectividades y discute tu resultado. 
+
+```{r}
+boxplot(distlev)
+#El boxplot indica que al menos el 75% de los nodos tienen entre 1 y 25 conexiones, mientras que la media (la raya que cruza la caja por la mitad) tiene un valor de 9 aproximadamente. #los outliers indican los valores atípicos para el número de conexiones de los nodos, que como podemos ver, disminuyen en frecuencia a partir de las 60 conexiones, de manera similar al histograma. 
+
+boxplot(dcl)
+#la mayoría de los datos tienen probabilidades bajas de tener muchas conexiones, lo cual demuestra que Real networks are sparse, las redes reales (en este caso una red biológica)son dispersas. 
+```
+
+#### c. Encuentre la proporción de nodos que tienen 15 o más conectividades.
+
+```{r}
+#Calcular el número de conexiones
+cnxn <- as.table(degree(yeast))# estoy creando una tabla de frecuencias con los degrees de yeast. 
+sort(cnxn, decreasing=TRUE) #ordené en orden decreciente 
+mayork15<-cnxn[cnxn>=15]#un subset que selecciona sólo los que tienen 15 o más conexiones.
+length(mayork15)#son 441 nodos con más de 15 conexiones.
+total<-sum(cnxn)
+sum(mayork15)
+proporcion<-((length(mayork15)/length(cnxn))*100)
+proporcion
+#el 16% de los nodos tienen 15 o más conexiones. 
+
+pr<-(((sum(mayork15)/sum(cnxn))*100))
+pr
+#los nodos con más de 15 conexiones contribuyen con el 62.62% de todas las conexiones de la red
+```
+
+#### d. Calcule el degree máximo de la red.
+
+```{r}
+degreemax<-sort(distlev, decreasing = TRUE)
+degreemax
+#el valor máximo de degree es 118, es decir que, el nodo correspondiente a YPR110C posee 118 conexiones con otros nodos.
+```
+
+#### e. Calcule el diámetro
+
+```{r}
+diameter(yeast) #la función diameter permite saber el máximo camino entre dos nodos, o sea, el diámetro de la red, cuyo valor es 15.
+```
+
+#### f. La trayectoria más larga.
+
+```{r}
+trayectoria<-(as.vector(distance_table(yeast)))
+trayectoria
+sort(trayectoria$res, decreasing = TRUE)
+#la trayectoria más larga es 786,151.
+
+```
+
+### **g. Elimine los 10 nodos más conectados de la red y determine el diámetro cada vez que lo haga.**
+
+```{r}
+# usaré un objeto de un chunk pasado, que tiene los degrees en orden decreciente para saber cuáles son los 10 más conectados
+degreemax
+#los 10 más conectados son YPR110C, YPL131W, YNL178W, YIL021W, YOL127W, YJL063C, YBR283C, YLR378C, YMR260C   YBR251W
+diameter(yeast) #diámetro antes de borrar = 15
+#Diametro -1 =15
+meno1 <- delete.vertices(yeast, v = "YPR110C")
+diameter(meno1)
+#Diametro -2 =15
+meno2 <- delete.vertices(yeast, v = "YPL131W")
+diameter(meno2)
+#Diametro -3 =15
+meno3 <- delete.vertices(yeast, v = "YNL178W")
+diameter(meno3)
+#diámetro -4= 15
+meno4 <- delete.vertices(yeast, v = "YIL021W")
+diameter(meno4)
+#diámetro -5= 15 YOL127W
+meno5<- delete.vertices(yeast, v = "YOL127W")
+diameter(meno5)
+#diámetro -6= 15 
+meno6<- delete.vertices(yeast, v = "YJL063C")
+diameter(meno6)
+#diámetro -7= 15 
+meno7<- delete.vertices(yeast, v = "YBR283C")
+diameter(meno7)
+#diámetro -8= 15 
+meno8<- delete.vertices(yeast, v = "YLR378C")
+diameter(meno8)
+#diámetro -9= 15 
+meno9<- delete.vertices(yeast, v = "YMR260C")
+diameter(meno9)
+#diámetro -10=15
+meno10<- delete.vertices(yeast, v = "YBR251W")
+diameter(meno10)
+
+```
+
+### **h. Determine los diez nodos más importantes por al menos tres medidas de centralidad.**
+
+```{r}
+is.directed(yeast) #Dice que no, por lo que asumimos que la red es no dirigida.
+excentricidad<-eccentricity(yeast)# calculo la excentricidad de la red, que es la distancia del nodo a todos los nodos, son los nodos más centrales los que tienen la excentricidad más baja. 
+sort(excentricidad, decreasing=FALSE)
+ #necesito ordenarlo en forma creciente, y el comando sort no puede usarse en este objeto, por lo que tengo que cambiar el nombre de los nodos. 
+# de esta manera puedo otorgarle un número a cada nodo,
+sort(excentricidad, decreasing=FALSE)
+#ordenar en orden creciente, ya que la excentricidad, entre más baja, indica que el nodo es más central. 
+# por excetricidad los nodos más importantes son  YBL046W   YHR102W   YGR173W   YDR342C   YIR005W   YNL201C   YDR188W YIL071C   YKL122C   YDL220C 
+
+digri<-degree(yeast)# no se indica si in o out, o total, debido a que es una red no dirigida. 
+sort(digri, decreasing =TRUE) #se ordena de manera decreciente, porque entre mayor el valor del degree, mayor la conectividad del nodo. Los nodos más importantes son YPR110C   YPL131W   YNL178W   YIL021W   YOL127W   YJL063C   YBR283C YLR378C   YMR260C   YBR251W
+
+clo<-closeness(yeast)
+#cercanía de la centralidad, también es una medida de centralidad. Suma todas las distancias, y este valor debe ser dividido entre 1, por lo que entre más grande el valor, mejor.
+
+  #sort(yeast, decreasing=TRUE) #no lo corrí porque mi computadora colapsa horrible, pero... 
+
+# ordenamos de modo decreciente, por lo que así sabremos cuales son los nodos con mayor closeness centrality. 
+  
+```
+
+### 2. Clusterizar la red por al menos dos métodos y determinar el tamaño del clúster más grande.
+
+```{r}
+
+#Finding community structure by multi-level optimization of modularity (louvain)
+
+metd1 <- cluster_louvain(yeast)
+c1<-table(membership(metd1)) #En total hay 114 clusters, 
+#y el tamaño del cluster más grande es de 460 nodos
+sort(c1, decreasing = TRUE)
+##
+#Community strucure via short random walks  (walktrap)
+mtd2<- cluster_walktrap(yeast)
+c2<-table(membership(mtd2))
+sort(c2, decreasing=TRUE)
+#el cluster más grande comprende 438 nodos, y en total son 353 clusters. 
+
+
+
+```
+
+#### j. Determine si la red es de mundo pequeño, ultra pequeño u otra.
+
+Para saber si la red es de mundo pequeño, debemos saber la media de la distancia, entre más pequeña, es más certero que la red es de mundo pequeño, además, también debe calcularse el coeficiente de clusterización ot transitividad, en el que se espera obtener valores grandes, si se trata de una red de mundo pequeño.
+
+Primero la distancia media, que arroja un valor cercano a 5.1, no es pequeño.
+
+```{r}
+#primero la distancia media 
+mean_distance(yeast)
+```
+
+Este comando sirve para calcular la transitividad, cuyo valor es de 0.4668, un valor pequeño.
+
+```{r}
+transitivity(yeast)
+#
+```
+
+No se trata de una red de mundo pequeño. Me parece que es una red free-scale, debido a que algunos nodos están altamente conectados, mientras que otros tienen un degree pequeño.
